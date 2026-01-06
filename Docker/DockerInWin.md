@@ -21,17 +21,17 @@ Chocolatey is a command-line package manager that simplifies software management
 
 3. Run the installation command:
 
-```powershell
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('[https://community.chocolatey.org/install.ps1](https://community.chocolatey.org/install.ps1)'))
+    ```powershell
+    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-```
+    ```
 
 
 4. Once finished, reload your environment variables:
-```powershell
-refreshenv
+    ```powershell
+    refreshenv
 
-```
+    ```
 
 
 5. **Verify:** Type `choco --version` to ensure it is installed correctly.
