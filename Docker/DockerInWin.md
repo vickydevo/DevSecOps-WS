@@ -1,5 +1,4 @@
 
-```markdown
 # Installation Guide: Chocolatey and Docker Desktop
 
 This guide outlines the steps to install the Chocolatey package manager and Docker Desktop on Windows.
@@ -69,8 +68,4 @@ docker run hello-world
 
 If you see the "Hello from Docker!" message, your setup is complete.
 
-```
 
-Would you like me to explain how to manage your Docker containers using a GUI tool, or should we move on to creating your first container?
-
-```
