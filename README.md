@@ -1,10 +1,8 @@
 To install these tools on Ubuntu 24.04, you need to handle Java and Maven through the standard repositories and Docker through the official Docker repository to ensure you get the latest version.
 
-Here is a professional `README.md` file you can use for your workshop.
 
 ---
 
-```markdown
 # Server Setup Guide: Java 21, Maven, and Docker
 This guide provides a step-by-step process to configure an **Ubuntu 24.04 LTS** instance on AWS with the essential DevSecOps stack.
 
@@ -12,9 +10,7 @@ This guide provides a step-by-step process to configure an **Ubuntu 24.04 LTS** 
 Always start by ensuring your package index is up to date.
 ```bash
 sudo apt update && sudo apt upgrade -y
-
 ```
-
 ---
 
 ## 2. Install Java 21 (OpenJDK)
@@ -28,10 +24,9 @@ sudo apt purge --autoremove openjdk-21* -y
 # For Java
 sudo apt purge --autoremove openjdk-21* -y
 
-
 ```
 
-**Verify installation:**
+**Verify Java installation:**
 
 ```bash
 java -version
@@ -49,7 +44,7 @@ sudo apt purge --autoremove maven -y
 
 ```
 
-**Verify installation:**
+**Verify maven  installation:**
 
 ```bash
 mvn -version
@@ -64,6 +59,7 @@ For Ubuntu 24.04, it is best practice to use the official Docker repo rather tha
 
 ### Step 4.1: Install Dependencies & Add GPG Key
 
+```bash
 sudo apt update
 sudo apt install ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -119,6 +115,7 @@ docker run hello-world
 
 ```bash
 docker run -d --name sonarqube -p 9000:9000 sonarqube:community
+# OR
 docker run -d --name sonarqube -p 9000:9000 sonarqube:lts-community
 ```
 **Access Sonarqube Server using  Using browser :**

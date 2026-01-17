@@ -1,0 +1,37 @@
+pipeline{
+    agent any
+    stages{
+        stage("Git Checkout"){
+            steps{
+                echo "========executing Git Checkout========"
+            }
+         
+        }
+        stage("SonarQube SAST Scan"){
+            steps{
+                sh " mvn clean verify sonar:sonar -Dsonar.projectKey=MyFirstProject -Dsonar.host.url=http://localhost:9000 -Dsonar.token=your_sonar_token"
+            }
+         
+        }
+        stage("OWASP Dependency Check Scan"){
+            steps{
+                sh "mvn dependency-check:check"
+            }
+         
+        }
+        stage("Docker Build"){
+            steps{
+                sh "docker build -t springboot-app . "
+                sh "docker images"
+            }
+         
+        }
+        stage("Trivy Image Scan"){
+            steps{
+                sh "trivy image --severity HIGH,CRITICAL --exit-code 1 springboot-app:latest || true"
+            }
+         
+        }
+
+    }
+}
