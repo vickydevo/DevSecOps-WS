@@ -10,7 +10,7 @@ This guide provides a step-by-step process to configure an **Ubuntu 24.04 LTS** 
 
 ## 1. Update System Packages
 Always start by ensuring your package index is up to date.
-
+```bash
 sudo apt update && sudo apt upgrade -y
 
 ```
@@ -23,6 +23,11 @@ Ubuntu 24.04 includes OpenJDK 21 in its default repositories.
 
 ```bash
 sudo apt install openjdk-21-jdk -y
+# For Java
+sudo apt purge --autoremove openjdk-21* -y
+# For Java
+sudo apt purge --autoremove openjdk-21* -y
+
 
 ```
 
@@ -39,6 +44,8 @@ java -version
 
 ```bash
 sudo apt install maven -y
+# For Maven
+sudo apt purge --autoremove maven -y
 
 ```
 
@@ -57,30 +64,31 @@ For Ubuntu 24.04, it is best practice to use the official Docker repo rather tha
 
 ### Step 4.1: Install Dependencies & Add GPG Key
 
-```bash
-sudo apt install ca-certificates curl gnupg -y
+sudo apt update
+sudo apt install ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL [https://download.docker.com/linux/ubuntu/gpg](https://download.docker.com/linux/ubuntu/gpg) | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
 
 ```
 
 ### Step 4.2: Add Docker Repository
 
 ```bash
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] [https://download.docker.com/linux/ubuntu](https://download.docker.com/linux/ubuntu) \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
+sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
 ```
 
 ### Step 4.3: Install Docker Engine
 
 ```bash
-sudo apt update
+sudo apt update -y
 sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
-
 ```
 
 ---
@@ -107,8 +115,29 @@ newgrp docker
 docker run hello-world
 
 ```
+**Installing Sonarqube Server using  Docker :**
+
+```bash
+docker run -d --name sonarqube -p 9000:9000 sonarqube:community
+docker run -d --name sonarqube -p 9000:9000 sonarqube:lts-community
+```
+**Access Sonarqube Server using  Using browser :**
+
+```bash
+http://54.167.94.226:9000
+
+```
+default credentials 
+
+```bash
+username: admin
+Password: admin 
+``
+<img width="1268" height="793" alt="Image" src="https://github.com/user-attachments/assets/06ce799a-54ce-4b06-aa8f-6bd286155f02" />
 
 ---
+
+http://54.167.94.226:9000
 
 ## Summary of Installed Versions
 
