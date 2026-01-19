@@ -8,21 +8,25 @@
 1. **Install Docker**: Follow the [Docker installation guide](https://docs.docker.com/get-docker/).
     ```bash
         sudo apt update -y && sudo apt install docker.io -y
+        # Add your current user to the docker group
+        sudo usermod -aG docker $USER && newgrp docker
     ```
-2. **Pull Image**:
-    ```bash
-    docker pull sonarqube:lts-community
-    ```
+
 3. **Run Container**:
     
     ```bash
+    # newer version
+    docker run -d --name sonarqube -p 9000:9000 sonarqube:community
+
+    # older version
     docker run -d --name sonarqube -p 9000:9000 sonarqube:lts-community
     ```
-    or
-    ```bash
-    docker run -d --name sonarqube -p 9000:9000 -e SONAR_JAVA_OPTS="-Djava.version=17" sonarqube:lts-community
-    ```
-    ![Image](https://github.com/user-attachments/assets/3984f69f-84c2-486f-ab10-6a61e73d5fd4)
+   **Verify version**:
+   ```bash
+   http://<instance-public-ip>:9000/api/server/version
+   ```
+    <img width="1268" height="793" alt="Image" src="https://github.com/user-attachments/assets/06ce799a-54ce-4b06-aa8f-6bd286155f02" />
+    
 4. **Verify**: Use `docker ps` to confirm the container is running.
 5. **Access**: Navigate to `http://<instance-public-ip>:9000`.
 
@@ -31,11 +35,14 @@
 1. **Default Credentials**:
     - Username: `admin`
     - Password: `admin`
-    ![Image](https://github.com/user-attachments/assets/6462c55b-b117-4387-8d97-44439ddeef88)
-2. **Change Password**: Prompted on first login.
-3. **Dashboard**:
-    ![Image](https://github.com/user-attachments/assets/a28caa7a-b75c-46dc-9522-33a69fbe6952)
+        <img width="1268" height="793" alt="Image" src="https://github.com/user-attachments/assets/06ce799a-54ce-4b06-aa8f-6bd286155f02" />
 
+2. **Change Password**: Prompted on first login.
+
+3. **Dashboard**:
+
+    ![Image](https://github.com/user-attachments/assets/a28caa7a-b75c-46dc-9522-33a69fbe6952)
+---
 ## Quality Profile in SonarQube
 
 A **Quality Profile** defines rules for code analysis, ensuring adherence to standards.

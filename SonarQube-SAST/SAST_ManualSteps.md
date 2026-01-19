@@ -29,12 +29,25 @@ Navigate to your project root (where `pom.xml` is) and run the following command
 
 > **Note:** Replace `<YOUR_TOKEN>` and `<EC2_PUBLIC_IP>` with your actual details.
 
+
+# check the version of SonarQube in Browser
 ```bash
+http://<EC2_PUBLIC_IP>:9000/api/server/version
+```
+
+```bash
+# New version of Sonarqube we token
 mvn clean verify sonar:sonar \
   -Dsonar.projectKey=my-spring-boot-app \
   -Dsonar.projectName='My Spring Boot App' \
   -Dsonar.host.url=http://<EC2_PUBLIC_IP>:9000 \
   -Dsonar.token=<YOUR_TOKEN>
+
+ # This command is used when we use sonar legacy version
+mvn clean verify sonar:sonar \
+  -Dsonar.projectKey=Java-spring \
+  -Dsonar.host.url=http://100.27.199.152:9000 \
+  -Dsonar.login=squ_79b071bacfedf38f2174b9322b2103d73c4bc470 
 
 ```
 
@@ -47,7 +60,7 @@ mvn clean verify sonar:sonar \
 
 ---
 
-## Step 4: View the Results
+## Step 4: View the Results in SonarQube Dashboard
 
 1. Wait for the terminal to show `BUILD SUCCESS`.
 2. Go to your browser: `http://<EC2_IP>:9000/projects`.
@@ -56,6 +69,7 @@ mvn clean verify sonar:sonar \
 * **Security Hotspots** (Code that needs review).
 * **Code Smells** (Maintainability issues).
 
+<img width="1845" height="742" alt="Image" src="https://github.com/user-attachments/assets/02f789ba-755e-4313-8659-60fb34767d14" />
 ---
 
 ### Key Teaching Points for your Workshop
