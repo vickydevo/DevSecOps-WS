@@ -3,7 +3,8 @@ pipeline{
     stages{
         stage("Git Checkout"){
             steps{
-                echo "========executing Git Checkout========"
+
+                sh "git branch: "
             }
          
         }
@@ -26,12 +27,86 @@ pipeline{
             }
          
         }
-        stage("Trivy Image Scan"){
-            steps{
-                sh "trivy image --severity HIGH,CRITICAL --exit-code 1 springboot-app:latest || true"
+       stage("Trivy Image Scan") {
+            steps {
+                // Run the scan and output to a text file
+                // --exit-code 0 ensures the build continues even if vulnerabilities are found
+                // Use --exit-code 1 if you want the pipeline to fail on HIGH/CRITICAL
+                sh "trivy image --severity HIGH,CRITICAL --format table --output report.txt springboot:v1"
             }
-         
+            post {
+                always {
+                    // This makes the report available in the Jenkins Build UI
+                    archiveArtifacts artifacts: 'report.txt', fingerprint: true
+                }
+            }
+        }
+    }
+}
+
+// ############################################################
+
+pipeline {
+    agent any
+    
+    tools {
+        // Ensure these names match what you configured in Jenkins 'Global Tool Configuration'
+        maven 'Maven3'
+        jdk 'Java21'
+    }
+
+    stages {
+        stage('Git Checkout') {
+            steps {
+                git 'https://github.com/your-repo/springboot-app.git'
+            }
         }
 
+        // --- STAGE 1: SONARQUBE (SAST) ---
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQubeServer') { // 'SonarQubeServer' is the name in Jenkins System Config
+                    sh "mvn clean verify sonar:sonar"
+                }
+            }
+        }
+        
+        stage("Quality Gate") {
+            steps {
+                // This waits for SonarQube to finish and fails the build if the Gate fails
+                waitForQualityGate abortPipeline: true
+            }
+        }
+
+        // --- STAGE 2: OWASP DEPENDENCY CHECK (SCA) ---
+        stage('OWASP Dependency Check') {
+            steps {
+                // This runs the scan on your project libraries
+                dependencyCheck additionalArguments: '--scan ./ --format HTML --format XML', odcInstallation: 'DP-Check'
+                
+                // This publishes the results as a graph in Jenkins
+                dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+            }
+        }
+
+        stage('Build & Dockerize') {
+            steps {
+                sh "mvn package -DskipTests"
+                sh "docker build -t springboot:v1 ."
+            }
+        }
+
+        // --- STAGE 3: TRIVY (Image Scan) ---
+        stage('Trivy Image Scan') {
+            steps {
+                // Generate a table report for the console and a text file for artifacts
+                sh "trivy image --severity HIGH,CRITICAL --format table --output report.txt springboot:v1"
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'report.txt', fingerprint: true
+                }
+            }
+        }
     }
 }
