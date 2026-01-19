@@ -6,7 +6,7 @@ In MNCs (Major Corporations), Trivy is usually configured to generate **JSON** o
 
 ### README.md: Container Security Scanning with Trivy
 
-```markdown
+
 # Lab: Docker Image Security Scanning with Trivy
 
 This guide provides the steps to install Trivy on an Ubuntu EC2 host and perform professional-grade vulnerability scans on Docker images.
@@ -82,9 +82,6 @@ trivy fs .
 
 ```
 
-
-
-```
 
 ---
 
