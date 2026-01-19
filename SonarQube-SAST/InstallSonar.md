@@ -25,7 +25,7 @@
    ```bash
    http://<instance-public-ip>:9000/api/server/version
    ```
-    <img width="1268" height="793" alt="Image" src="https://github.com/user-attachments/assets/06ce799a-54ce-4b06-aa8f-6bd286155f02" />
+
     
 4. **Verify**: Use `docker ps` to confirm the container is running.
 5. **Access**: Navigate to `http://<instance-public-ip>:9000`.
