@@ -18,8 +18,10 @@ By using the `gdown` method below, we ensure everyone has the same data instantl
 `gdown` is a tool that allows Ubuntu to download large files from Google Drive that usually require a browser "virus scan" confirmation.
 
 ```bash
-sudo apt update && sudo apt install python3-pip -y
-pip3 install gdown
+sudo apt update -y && apt install pipx -y
+pipx install gdown -y
+pipx ensurepath
+source ~/.bashrc
 
 ```
 
@@ -51,6 +53,8 @@ mkdir -p ~/.m2/repository/org/owasp/dependency-check-data/
 
 # Unzip the content directly into the data path
 # Note: Dependency-check expects the extracted H2 database files (.mv.db) here
+sudo apt install unzip
+
 unzip nvd-data.zip -d ~/.m2/repository/org/owasp/dependency-check-data/
 
 ```

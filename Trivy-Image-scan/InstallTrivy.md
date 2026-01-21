@@ -1,11 +1,7 @@
-This version of your content is consolidated into a logical, professional `README.md` structure. I have added clear headings, subheadings, and a clean command flow to make it easy for workshop participants to follow.
 
----
-
-```markdown
 # Workshop: Docker Image Security Scanning with Trivy
 
-This guide covers the installation, professional usage (MNC style), and best practices for using Trivy to secure containerized applications.
+This guide covers the installation, professional usage , and best practices for using Trivy to secure containerized applications.
 
 ---
 
@@ -102,7 +98,8 @@ Trivy can scan your project directory before you even build your Docker image. T
 trivy fs .
 
 ```
-
+ find / -name "html.tpl" 2>/dev/null
+include above and explain why it need
 ### 3.3 Clear Cache (Storage Management)
 
 If you run out of disk space or need to force a database update:

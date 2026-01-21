@@ -37,16 +37,16 @@ Jenkins is an open-source automation server that helps automate parts of softwar
 
 2. **Install Java**:
     ```bash
-    sudo apt install fontconfig openjdk-21-jre -y
+    sudo apt install openjdk-21-jdk -y
     ```
 
 3. **Add Jenkins Repository**:
     ```bash
-    sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
-    https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-    echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
-    https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
-    /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key
+echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
 
     ```
 

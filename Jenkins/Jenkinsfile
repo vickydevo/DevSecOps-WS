@@ -1,28 +1,38 @@
 pipeline{
     agent any
     stages{
+        
         stage("Git Checkout"){
             steps{
 
-                sh "git branch: "
+                git branch: 'main', url: 'https://github.com/vickydevo/springboot.git'
             }
          
         }
         stage("SonarQube SAST Scan"){
             steps{
-                sh " mvn clean verify sonar:sonar -Dsonar.projectKey=MyFirstProject -Dsonar.host.url=http://localhost:9000 -Dsonar.token=your_sonar_token"
+                
+                sh " mvn clean verify sonar:sonar -Dsonar.projectKey=Java-spring -Dsonar.host.url=http://100.3.125.217:9000 -Dsonar.token=sqa_26dbfe11088a39d6062911bb6a08da8828498"
             }
          
         }
         stage("OWASP Dependency Check Scan"){
             steps{
-                sh "mvn dependency-check:check"
+             sh "mvn dependency-check:check -DautoUpdate=false -DdataDirectory=/var/lib/jenkins/dependency-check-data/11.0"
+             // sh "mvn dependency-check:check -DautoUpdate=false -DdataDirectory=/home/ubuntu/.m2/repository/org/owasp/dependency-check-data/"
             }
+            post {
+        always {
+            // This step is provided by the Jenkins Plugin to display the UI report
+            // It looks for the XML file in the 'target' folder by default
+            dependencyCheckPublisher pattern: 'target/dependency-check-report.html'
+        }
+    }
          
         }
         stage("Docker Build"){
             steps{
-                sh "docker build -t springboot-app . "
+                sh "docker build -t springboot:v1 . "
                 sh "docker images"
             }
          
@@ -32,18 +42,21 @@ pipeline{
                 // Run the scan and output to a text file
                 // --exit-code 0 ensures the build continues even if vulnerabilities are found
                 // Use --exit-code 1 if you want the pipeline to fail on HIGH/CRITICAL
-                sh "trivy image --severity HIGH,CRITICAL --format table --output report.txt springboot:v1"
+                // sh "trivy image --severity HIGH,CRITICAL --format table --output report.txt springboot:v1"
+                sh "trivy image --severity HIGH,CRITICAL --format template --template '@/usr/local/share/trivy/templates/html.tpl' --output report.html springboot:v1"
             }
             post {
                 always {
                     // This makes the report available in the Jenkins Build UI
-                    archiveArtifacts artifacts: 'report.txt', fingerprint: true
+                    // archiveArtifacts artifacts: 'report.txt', fingerprint: true
+                    archiveArtifacts artifacts: 'report.html', fingerprint: true
                 }
             }
         }
     }
 }
-
+// ############################################################
+// Enhanced Jenkinsfile with SonarQube, OWASP Dependency Check, and Trivy Integration
 // ############################################################
 
 pipeline {
