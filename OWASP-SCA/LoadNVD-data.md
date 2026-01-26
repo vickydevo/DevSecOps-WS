@@ -1,121 +1,94 @@
+This guide is now reorganized to prioritize the **Permanent Configuration** and explains the "Short Version" vs. the "Full Coordinate" command as requested.
+
+---
 
 # Workshop Guide: Local NVD Data Setup for Dependency-Check
 
-This guide explains how to bypass API rate limits and "NVD API Key" requirements by using a pre-downloaded database.
+This guide explains how to bypass NIST API rate limits and "403 Forbidden" errors by using a pre-downloaded vulnerability database.
 
-## 1. Why are we using a manual Zip file?
-In a professional workshop environment, if 20+ students attempt to download the NVD data directly from the official **NIST (National Institute of Standards and Technology)** servers simultaneously, the NIST firewalls will often:
-* **Rate-limit** the classroom IP address.
-* **Block** requests that don't have an official API Key.
-* **Slow down** the scan (the NVD database is several hundred MBs).
+## 1. Prerequisites (Download & Extract)
 
-By using the `gdown` method below, we ensure everyone has the same data instantly without getting blocked.
----
-
-## 2. Installation & Setup
-
-### 2.1 Install gdown
-`gdown` is a tool that allows Ubuntu to download large files from Google Drive that usually require a browser "virus scan" confirmation.
+Before configuring Maven, ensure the data is in the correct location so the plugin can find it.
 
 ```bash
-sudo apt update -y && apt install pipx -y
-pipx install gdown -y
-pipx ensurepath
-source ~/.bashrc
-
-```
-
----
-
-## 2. Download and Extract NVD Data
-
-
-
-The NVD data must be placed in a directory where the Dependency-Check plugin can access it. By default, it uses a H2 database.
-
-### 2.1 Download from Google Drive
-
-Replace the ID in the command below with your file ID if it differs.
-
-```bash
-# Download the zip file using its File ID
+# 1. Download the database zip
 gdown 1GwVC4uUZUxIA3ukz7AGYca745H1bXju9 -O nvd-data.zip
 
-```
+# 2. Create the versioned directory (must be 11.0 for plugin version 11.x)
+mkdir -p ~/.m2/repository/org/owasp/dependency-check-data/11.0
 
-### 2.2 Create Directory and Unzip
-
-Standard practice is to store this in a dedicated data folder within your `.m2` directory or project root.
-
-```bash
-# Create the standard data directory
-mkdir -p ~/.m2/repository/org/owasp/dependency-check-data/
-
-# Unzip the content directly into the data path
-# Note: Dependency-check expects the extracted H2 database files (.mv.db) here
-sudo apt install unzip
-
-unzip nvd-data.zip -d ~/.m2/repository/org/owasp/dependency-check-data/
+# 3. Unzip content
+unzip nvd-data.zip -d ~/.m2/repository/org/owasp/dependency-check-data/11.0
 
 ```
 
 ---
 
-## 3. Configure Maven for Offline Scan
+## 2. Permanent Configuration in `pom.xml`
 
-To prevent the plugin from trying to connect to the NVD servers, you must set `autoUpdate` to `false` and point it to your local data directory.
-
-### Option A: Command Line Execution (Recommended)
-
-Run this command from your project root (where `pom.xml` is located):
-
-```bash
-mvn org.owasp:dependency-check-maven:check \
-  -DautoUpdate=false \
-  -DdataDirectory=~/.m2/repository/org/owasp/dependency-check-data/
-
-```
-
-### Option B: Permanent Configuration in `pom.xml`
-
-Add this configuration to your `pom.xml` so you don't have to pass flags every time:
+To avoid typing long flags every time, add this configuration to your `pom.xml`. This locks the security policy to **CVSS 7.0 (High)** and points the plugin to your local folder.
 
 ```xml
 <plugin>
     <groupId>org.owasp</groupId>
     <artifactId>dependency-check-maven</artifactId>
-    <version>9.0.9</version> <configuration>
+    <version>11.1.0</version>
+    <configuration>
         <autoUpdate>false</autoUpdate>
         <dataDirectory>${user.home}/.m2/repository/org/owasp/dependency-check-data/</dataDirectory>
+        
+        <failBuildOnCVSS>7.0</failBuildOnCVSS>
+        
+        <formats>
+            <format>HTML</format>
+            <format>JSON</format>
+        </formats>
     </configuration>
-    <executions>
-        <execution>
-            <goals>
-                <goal>check</goal>
-            </goals>
-        </execution>
-    </executions>
 </plugin>
 
 ```
 
----
+### The "Short Version" Command
 
-## 4. Verification
+Once the `pom.xml` above is saved, you no longer need to type the full coordinates. Use this command to run the scan:
 
-1. Run the scan command from **Step 3.1**.
-2. Check the logs. You should **not** see messages like "Updating NVD data" or "Requesting API Key".
-3. Verify that the `target/dependency-check-report.html` is generated successfully.
-
----
-
-## Important Notes
-
-* **Data Freshness:** Since `autoUpdate` is set to `false`, your scan will only be as accurate as the data in your zip file. You will need to manually update the zip file periodically to catch new vulnerabilities.
-* **File Permissions:** Ensure the user running the Maven command has read/write access to the `~/.m2/repository/org/owasp/dependency-check-data/` folder.
+```bash
+mvn dependency-check:check -DautoUpdate=false -o
 
 ```
 
-[cite_start]The file referenced is "nvd-data-11.zip"[cite: 1].
+---
+
+## 3. Why we don't use the long command anymore
+
+In early setup steps, we used the "Full Coordinate" command:
+`mvn org.owasp:dependency-check-maven:check -DautoUpdate=false -DdataDirectory=...`
+
+**Why stop using it?**
+
+1. **Redundancy:** Once the plugin is in your `pom.xml`, Maven already knows the `groupId`, `artifactId`, and `version`. Typing them again is redundant.
+2. **Configuration Sync:** The long command ignores the `<configuration>` block in your `pom.xml` unless you repeat every single flag. Using `mvn dependency-check:check` automatically respects your `failBuildOnCVSS` and `formats` settings.
+3. **Human Error:** The long command is easy to mistype. The short version is clean and standardized for the classroom.
+
+---
+
+## 4. Execution Workflow
+
+1. **Regular Development:** Use `mvn clean verify`. This will **not** run the security scan (it remains fast).
+2. **Security Audit:** When you want to check for bugs, run:
+```bash
+mvn dependency-check:check -DautoUpdate=false -o
 
 ```
+
+
+
+---
+
+## 5. Verification
+
+1. **Check Logs:** You should see `Check for updates (multi-threaded) : Finished` instantly.
+2. **Locate Report:** Open `target/dependency-check-report.html`.
+3. **Validate Findings:** Verify that **CVE-2021-44228 (Log4Shell)** is flagged.
+
+**Note:** The `-o` flag in the command stands for **Offline**. It ensures Maven uses your local `.m2` repository and does not try to reach out to the internet for any reason.
