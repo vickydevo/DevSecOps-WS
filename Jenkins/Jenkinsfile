@@ -9,6 +9,15 @@ pipeline{
             }
          
         }
+               stage ("gitleaks"){
+            steps {
+              
+                sh "gitleaks detect --source . --report-path=report.json --report-format=json"
+
+
+
+            }
+        }
         stage("SonarQube SAST Scan"){
             steps{
                 
