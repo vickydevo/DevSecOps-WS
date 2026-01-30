@@ -14,7 +14,7 @@ Instead of keeping the data in the `ubuntu` home folder, move it to a location t
 
 ```bash
 # Move the folder to the Jenkins library directory
-sudo mv /home/ubuntu/.m2/repository/org/owasp/dependency-check-data /var/lib/jenkins/
+sudo cp -r /home/ubuntu/.m2/repository/org/owasp/dependency-check-data /var/lib/jenkins/
 
 ```
 
@@ -35,7 +35,7 @@ Update the `-DdataDirectory` path in your Jenkinsfile to point to the new locati
 ```groovy
 stage("OWASP Dependency Check Scan") {
     steps {
-        sh "mvn dependency-check:check -DautoUpdate=false -DdataDirectory=/var/lib/jenkins/dependency-check-data/11.0"
+        sh "mvn dependency-check:check -DautoUpdate=false -DdataDirectory=/var/lib/jenkins/dependency-check-data/12.0"
     }
 }
 

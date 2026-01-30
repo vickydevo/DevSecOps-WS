@@ -72,4 +72,10 @@ Jenkins is an open-source automation server that helps automate parts of softwar
       ```bash
       sudo cat /var/lib/jenkins/secrets/initialAdminPassword
       ```
+
+## Add Jenkins USER to docker group
+```bash
+sudo usermod -aG docker jenkins && newgrp docker
+sudo systemctl restart jenkins
+```
     - Follow the setup wizard to complete the installation.

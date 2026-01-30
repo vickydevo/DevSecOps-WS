@@ -18,7 +18,7 @@ pipeline{
         }
         stage("OWASP Dependency Check Scan"){
             steps{
-             sh "mvn dependency-check:check -DautoUpdate=false -DdataDirectory=/var/lib/jenkins/dependency-check-data/11.0"
+             sh "mvn dependency-check:check -DautoUpdate=false -DdataDirectory=/var/lib/jenkins/dependency-check-data/12.0"
              // sh "mvn dependency-check:check -DautoUpdate=false -DdataDirectory=/home/ubuntu/.m2/repository/org/owasp/dependency-check-data/"
             }
             post {

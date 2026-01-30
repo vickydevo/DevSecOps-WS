@@ -25,11 +25,11 @@ source ~/.bashrc
 pipx install gdown
 
 # 4. And run gdown (if this fails, run 'source ~/.bashrc' one more time)
-gdown 1GwVC4uUZUxIA3ukz7AGYca745H1bXju9 -O nvd-data.zip
+gdown 1o7FKaSLfJ-MxNuZQvXM8BbBTG9cUfCSN -O nvd-data-12.zip
 
 # 5. Extract the data
 mkdir -p ~/.m2/repository/org/owasp/dependency-check-data/12.0
-unzip nvd-data.zip -d ~/.m2/repository/org/owasp/dependency-check-data/12.0
+unzip nvd-data-12.zip -d ~/.m2/repository/org/owasp/dependency-check-data/12.0
 ```
 
 ---
@@ -63,11 +63,13 @@ To avoid typing long flags every time, add this configuration to your `pom.xml`.
 Once the `pom.xml` above is saved, you no longer need to type the full coordinates. Use this command to run the scan:
 
 ```bash
-mvn dependency-check:check -DautoUpdate=false -o
-#or
+mvn dependency-check:check -U -DautoUpdate=false -DdataDirectory=/home/ubuntu/.m2/repository/org/owasp/dependency-check-data/12.0
 
-mvn dependency-check:check -DautoUpdate=false -DoutputDirectory=.
+```
 
+### Check the report 
+```bash
+cat /home/ubuntu/springboot/target/dependency-check-report.html
 ```
 
 ---
