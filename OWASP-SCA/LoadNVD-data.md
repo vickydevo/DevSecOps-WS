@@ -11,15 +11,25 @@ This guide explains how to bypass NIST API rate limits and "403 Forbidden" error
 Before configuring Maven, ensure the data is in the correct location so the plugin can find it.
 
 ```bash
-# 1. Download the database zip
+# 1. Install the tools
+sudo apt update && sudo apt install pipx unzip -y
+
+# 2. Add pipx to your PATH
+pipx ensurepath
+
+# --- RESTART / REFRESH HAPPENS HERE ---
+source ~/.bashrc  
+# --------------------------------------
+
+# 3. Now you can install gdown
+pipx install gdown
+
+# 4. And run gdown (if this fails, run 'source ~/.bashrc' one more time)
 gdown 1GwVC4uUZUxIA3ukz7AGYca745H1bXju9 -O nvd-data.zip
 
-# 2. Create the versioned directory (must be 11.0 for plugin version 11.x)
-mkdir -p ~/.m2/repository/org/owasp/dependency-check-data/11.0
-
-# 3. Unzip content
-unzip nvd-data.zip -d ~/.m2/repository/org/owasp/dependency-check-data/11.0
-
+# 5. Extract the data
+mkdir -p ~/.m2/repository/org/owasp/dependency-check-data/12.0
+unzip nvd-data.zip -d ~/.m2/repository/org/owasp/dependency-check-data/12.0
 ```
 
 ---
@@ -54,6 +64,9 @@ Once the `pom.xml` above is saved, you no longer need to type the full coordinat
 
 ```bash
 mvn dependency-check:check -DautoUpdate=false -o
+#or
+
+mvn dependency-check:check -DautoUpdate=false -DoutputDirectory=.
 
 ```
 

@@ -25,19 +25,11 @@ For Maven to recognize the `sonar:sonar` command, you must define the **sonar-ma
 Add the following block inside the `<build><plugins>` section of your `pom.xml`:
 
 ```xml
-<project>
-  ...
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.sonarsource.scanner.maven</groupId>
-        <artifactId>sonar-maven-plugin</artifactId>
-        <version>3.9.1.2184</version>
-      </plugin>
-      
-    </plugins>
-  </build>
-</project>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>${sonar.maven.plugin.version}</version>
+            </plugin>
 
 ```
 
