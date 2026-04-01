@@ -98,6 +98,10 @@ Options:
 
 Command:
 ```sh
+
+aws s3api get-bucket-ownership-controls --bucket YOUR_BUCKET_NAME
+
+# apply
 aws s3api put-bucket-ownership-controls \
     --bucket frontend-nov-27 \
     --ownership-controls 'Rules=[{ObjectOwnership=ObjectWriter}]'
