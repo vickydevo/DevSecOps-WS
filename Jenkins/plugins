@@ -2,3 +2,9 @@ OWASP Dependency-Check
 OWASP Dependency-Track
 Pipeline: Stage View 
 sonarqube scanner
+Quality Gates  - warning
+jdk  
+
+
+
+

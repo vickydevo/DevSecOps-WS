@@ -63,13 +63,24 @@ mvn clean verify sonar:sonar \
   -Dsonar.projectKey=my-spring-boot-app \
   -Dsonar.projectName='My Spring Boot App' \
   -Dsonar.host.url=http://<EC2_PUBLIC_IP>:9000 \
-  -Dsonar.token=<YOUR_TOKEN>
+  -Dsonar.token=<YOUR_TOKEN> \
+  -Ddependency-check.skip=true
+
+  
 
  # This command is used when we use sonar legacy version like LTS version
 mvn clean verify sonar:sonar \
   -Dsonar.projectKey=Java-spring \
   -Dsonar.host.url=http://100.27.199.152:9000 \
   -Dsonar.login=squ_79b071bacfedf38f2174b9322b2103d73c4b 
+
+# manual way
+sonar-scanner \
+  -Dsonar.projectKey=JavaProject \
+  -Dsonar.sources=src/main/java \
+  -Dsonar.host.url=http://32.192.4.168:9000 \
+  -Dsonar.token=squ_665886081f6aa9068c4c1b4530ee2e53580748a4
+
 
 ```
 

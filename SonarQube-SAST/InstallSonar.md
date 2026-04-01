@@ -3,6 +3,13 @@
 
 ## Installation Setup of SonarQube
 
+## Prerequisites
+
+1. **SonarQube Server:** Running on `http://<EC2-IP>:9000`
+2. **Java & Maven:** Installed on the EC2 host.
+3. **Project:** A Spring Boot application with a `pom.xml`.
+4. Minimum Cloud Tier: t3.medium (2 vCPUs, 4GB RAM). SSD 20GB
+
 ### Running SonarQube as a Docker Container 
 
 1. **Install Docker**: Follow the [Docker installation guide](https://docs.docker.com/get-docker/).
